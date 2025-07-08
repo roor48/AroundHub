@@ -1,30 +1,28 @@
 package study.min.aroundhub.dto;
 
 public class MemberDTO {
-
     private String name;
     private String email;
 
-
+    //region Getter/Setter
     public String getName() {
-        return name;
+        return this.name;
     }
+
+    public String getEmail() {
+        return this.email;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
-    }
     public void setEmail(String email) {
         this.email = email;
     }
+    //endregion
 
-    @Override
     public String toString() {
-        return "MemberDTO{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return "MemberDTO(name=" + this.getName() + ", email=" + this.getEmail() + ")";
     }
 }
