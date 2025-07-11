@@ -11,7 +11,7 @@ import study.min.aroundhub.data.handler.ProductDataHandler;
 @Transactional
 public class ProductDataHandlerImpl implements ProductDataHandler {
 
-    ProductDAO productDAO;
+    private final ProductDAO productDAO;
 
     @Autowired
     public ProductDataHandlerImpl(ProductDAO productDAO) {

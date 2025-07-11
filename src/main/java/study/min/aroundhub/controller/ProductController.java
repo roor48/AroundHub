@@ -4,18 +4,24 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import study.min.aroundhub.common.Constants;
+import study.min.aroundhub.common.exception.AroundHubException;
 import study.min.aroundhub.data.dto.ProductDto;
 import study.min.aroundhub.service.ProductService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/product-api") // http://locallhost:8080/api/v1/product-api/*
 public class ProductController {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
-    private ProductService productService;
+    private final ProductService productService;
 
     @Autowired
     public ProductController(ProductService productService) {
@@ -59,5 +65,13 @@ public class ProductController {
     @DeleteMapping("/product/{productId}")
     public ProductDto deleteProduct(@PathVariable("productId") String productId) {
         return null;
+    }
+
+    @PostMapping("/product/exception")
+    public void exceptionTest() throws AroundHubException {
+        throw new AroundHubException(
+                Constants.ExceptionClass.PRODUCT,
+                HttpStatus.FORBIDDEN,
+                " 의도한 에러가 발생.");
     }
 }

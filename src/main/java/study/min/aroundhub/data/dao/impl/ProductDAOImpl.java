@@ -9,7 +9,7 @@ import study.min.aroundhub.data.repository.ProductRepository;
 @Service
 public class ProductDAOImpl implements ProductDAO {
 
-    ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
     @Autowired
     public ProductDAOImpl(ProductRepository productRepository) {

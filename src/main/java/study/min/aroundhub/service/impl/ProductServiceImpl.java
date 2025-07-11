@@ -10,7 +10,7 @@ import study.min.aroundhub.service.ProductService;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    ProductDataHandler productDataHandler;
+    private final ProductDataHandler productDataHandler;
 
     @Autowired
     public ProductServiceImpl(ProductDataHandler productDataHandler) {
