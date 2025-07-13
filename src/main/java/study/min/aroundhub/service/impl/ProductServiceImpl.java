@@ -2,6 +2,10 @@ package study.min.aroundhub.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import study.min.aroundhub.data.dto.ProductDto;
 import study.min.aroundhub.data.entity.ProductEntity;
 import study.min.aroundhub.data.handler.ProductDataHandler;
@@ -10,7 +14,9 @@ import study.min.aroundhub.service.ProductService;
 @Service
 public class ProductServiceImpl implements ProductService {
 
-    private final ProductDataHandler productDataHandler;
+    private final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+
+    ProductDataHandler productDataHandler;
 
     @Autowired
     public ProductServiceImpl(ProductDataHandler productDataHandler) {
@@ -18,22 +24,29 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDto saveProduct(String productId, String productName, int productPrice, int productStock) {
-        ProductEntity productEntity = productDataHandler.saveProductEntity(
-                productId, productName, productPrice, productStock);
+    public ProductDto saveProduct(
+            String productId, String productName, int productPrice, int productStock) {
 
-        ProductDto productDto = new ProductDto(productEntity.getProductId(),
-                productEntity.getProductName(), productEntity.getProductPrice(), productEntity.getProductStock());
+        LOGGER.info("[saveProduct] productDataHandler 로 상품 정보 저장 요청");
+        ProductEntity product =
+                productDataHandler.saveProductEntity(productId, productName, productPrice, productStock);
+
+        LOGGER.info("[saveProduct] Entity 객체를 DTO 객체로 변환 작업. productId : {}", product.getProductId());
+        ProductDto productDto =
+                new ProductDto(product.getProductId(), product.getProductName(), product.getProductPrice(), product.getProductStock());
 
         return productDto;
     }
 
     @Override
     public ProductDto getProduct(String productId) {
-        ProductEntity productEntity = productDataHandler.getProductEntity(productId);
 
-        ProductDto productDto = new ProductDto(productEntity.getProductId(),
-                productEntity.getProductName(), productEntity.getProductPrice(), productEntity.getProductStock());
+        LOGGER.info("[getProduct] productDataHandler 로 상품 정보 조회 요청");
+        ProductEntity product = productDataHandler.getProductEntity(productId);
+
+        LOGGER.info("[getProduct] Entity 객체를 DTO 객체로 변환 작업. productId : {}", product.getProductId());
+        ProductDto productDto =
+                new ProductDto(product.getProductId(), product.getProductName(), product.getProductPrice(), product.getProductStock());
 
         return productDto;
     }
