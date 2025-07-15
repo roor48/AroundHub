@@ -89,13 +89,24 @@ public class ShortUrlServiceImpl implements ShortUrlService {
     }
 
     @Override
-    public ShortUrlResponseDto deleteByShortUrl(String shortUrl) {
-        return null;
+    public void deleteShortUrl(String url) {
+        if (url.contains("localhost:7070")) {
+            LOGGER.info("[deleteShortUrl] Request Url is 'ShortUrl'.");
+            deleteByShortUrl(url);
+        } else {
+            LOGGER.info("[deleteShortUrl] Request Url is 'OriginalUrl'.");
+            deleteByOriginalUrl(url);
+        }
     }
 
-    @Override
-    public ShortUrlResponseDto deleteByOriginalUrl(String originalUrl) {
-        return null;
+    private void deleteByShortUrl(String url) {
+        LOGGER.info("[deleteShortUrl] delete record");
+        shortUrlDao.deleteByShortUrl(url);
+    }
+
+    private void deleteByOriginalUrl(String url) {
+        LOGGER.info("[deleteByOriginalUrl] delete record");
+        shortUrlDao.deleteByOriginalUrl(url);
     }
 
     private ResponseEntity<MinUriDto> requestShortUrl(String clientId, String clientSecret, String originalUrl) {
