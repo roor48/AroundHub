@@ -2,6 +2,7 @@ package study.min.aroundhub.service.impl;
 
 import java.net.URI;
 import java.util.Arrays;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +18,37 @@ import study.min.aroundhub.data.dao.ShortUrlDao;
 import study.min.aroundhub.data.dto.MinUriDto;
 import study.min.aroundhub.data.dto.ShortUrlResponseDto;
 import study.min.aroundhub.data.entity.ShortUrlEntity;
+import study.min.aroundhub.data.repository.ShortUrlRedisRepository;
 import study.min.aroundhub.service.ShortUrlService;
 
 @Service
 public class ShortUrlServiceImpl implements ShortUrlService {
 
-    Logger LOGGER = LoggerFactory.getLogger(ShortUrlServiceImpl.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(ShortUrlServiceImpl.class);
+    private final ShortUrlDao shortUrlDao;
+    private final ShortUrlRedisRepository shortUrlRedisRepository;
 
-    ShortUrlDao shortUrlDao;
 
     @Autowired
-    public ShortUrlServiceImpl(ShortUrlDao shortUrlDao) {
+    public ShortUrlServiceImpl(ShortUrlDao shortUrlDao, ShortUrlRedisRepository shortUrlRedisRepository) {
         this.shortUrlDao = shortUrlDao;
+        this.shortUrlRedisRepository = shortUrlRedisRepository;
     }
 
     @Override
     public ShortUrlResponseDto getShortUrl(String clientId, String clientSecret, String originalUrl) {
 
         LOGGER.info("[getShortUrl] request data : {}", originalUrl);
+
+        // Cache Logic
+        Optional<ShortUrlResponseDto> foundResponse = shortUrlRedisRepository.findById(originalUrl);
+        if (foundResponse.isPresent()) {
+            LOGGER.info("[getShortUrl] Cache Data is existed.");
+            return foundResponse.get();
+        } else {
+            LOGGER.info("[getShortUrl] Cache Data does not existed.");
+        }
+
         ShortUrlEntity getShortUrlEntity = shortUrlDao.getShortUrl(originalUrl);
 
         String orgUrl;
@@ -78,6 +92,10 @@ public class ShortUrlServiceImpl implements ShortUrlService {
         shortUrlDao.saveShortUrl(shortUrlEntity);
 
         ShortUrlResponseDto shortUrlResponseDto = new ShortUrlResponseDto(orgUrl, shortUrl);
+
+        // Cache Logic
+        shortUrlRedisRepository.save(shortUrlResponseDto);
+
         LOGGER.info("[generateShortUrl] Response DTO : {}", shortUrlResponseDto.toString());
         return shortUrlResponseDto;
     }
