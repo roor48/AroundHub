@@ -8,6 +8,7 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.ToString;
 
 @Entity
 @Getter
@@ -15,6 +16,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 @Table(name="product")
 public class ProductEntity extends BaseEntity {
     @Id
