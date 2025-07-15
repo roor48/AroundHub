@@ -1,5 +1,7 @@
 package study.min.aroundhub.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import study.min.aroundhub.service.ListenerService;
 @RequestMapping("/listener")
 public class ListenerController {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(ListenerController.class);
     private final ListenerService listenerService;
 
     @Autowired
@@ -30,6 +33,7 @@ public class ListenerController {
 
     @PostMapping
     public void saveListener(String name) {
+        LOGGER.info("[saveListener] 실행되었습니다.");
         ListenerEntity listenerEntity = new ListenerEntity();
         listenerEntity.setName(name);
 
