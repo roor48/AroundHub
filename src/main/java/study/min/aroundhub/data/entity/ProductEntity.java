@@ -16,9 +16,10 @@ import lombok.Builder;
 @AllArgsConstructor
 @Builder
 @Table(name="product")
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
     @Id
     String productId;
+
     String productName;
     Integer productPrice;
     Integer productStock;
