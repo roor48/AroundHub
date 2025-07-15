@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import study.min.aroundhub.data.dao.ProductDAO;
-import study.min.aroundhub.data.entity.ProductEntity;
+import study.min.aroundhub.data.entity.Product;
 import study.min.aroundhub.data.handler.ProductDataHandler;
 
 @Service
@@ -19,14 +19,14 @@ public class ProductDataHandlerImpl implements ProductDataHandler {
     }
 
     @Override
-    public ProductEntity saveProductEntity(String productId, String productName, int productPrice, int productStock) {
-        ProductEntity productEntity = new ProductEntity(productId, productName, productPrice, productStock);
+    public Product saveProductEntity(String productId, String productName, int productPrice, int productStock) {
+        Product product = new Product(productId, productName, productPrice, productStock);
 
-        return productDAO.saveProduct(productEntity);
+        return productDAO.saveProduct(product);
     }
 
     @Override
-    public ProductEntity getProductEntity(String productId) {
+    public Product getProductEntity(String productId) {
         return productDAO.getProduct(productId);
     }
 }

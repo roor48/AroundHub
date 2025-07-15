@@ -8,7 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import study.min.aroundhub.data.entity.ProductEntity;
+import study.min.aroundhub.data.entity.Product;
 
 @Data
 @NoArgsConstructor
@@ -34,12 +34,12 @@ public class ProductDto {
     @Max(9999)
     private int productStock;
 
-    public ProductEntity toEntity() {
-        return ProductEntity.builder()
-                .productId(productId)
-                .productName(productName)
-                .productPrice(productPrice)
-                .productStock(productStock)
+    public Product toEntity() {
+        return Product.builder()
+                .id(productId)
+                .name(productName)
+                .price(productPrice)
+                .stock(productStock)
                 .build();
     }
 }

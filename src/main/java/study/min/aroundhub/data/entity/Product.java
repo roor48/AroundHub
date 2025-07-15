@@ -18,11 +18,11 @@ import lombok.ToString;
 @Builder
 @ToString
 @Table(name="product")
-public class ProductEntity extends BaseEntity {
+public class Product extends BaseEntity {
     @Id
-    String productId;
+    String id;
 
-    String productName;
-    Integer productPrice;
-    Integer productStock;
+    String name;
+    Integer price;
+    Integer stock;
 }
