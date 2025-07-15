@@ -5,6 +5,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.transaction.annotation.Transactional;
 import study.min.aroundhub.data.entity.Product;
 
@@ -16,24 +19,23 @@ public class ProductRepositoryTest {
 
     @BeforeEach
     void GenerateData() {
-        int count = 1;
-        productRepository.save(getProduct(Integer.toString(count), count++, 2000, 3000));
-        productRepository.save(getProduct(Integer.toString(count), count++, 3000, 9000));
-        productRepository.save(getProduct(Integer.toString(--count), count+=2, 1500, 200));
-        productRepository.save(getProduct(Integer.toString(count), count++, 4000, 5000));
-        productRepository.save(getProduct(Integer.toString(count), count++, 10000, 1500));
-        productRepository.save(getProduct(Integer.toString(count), count++, 1000, 1000));
-        productRepository.save(getProduct(Integer.toString(count), count++, 500, 10000));
-        productRepository.save(getProduct(Integer.toString(count), count++, 8500, 3500));
-        productRepository.save(getProduct(Integer.toString(count), count++, 7200, 2000));
-        productRepository.save(getProduct(Integer.toString(count), count++, 5100, 1700));
+        productRepository.save(getProduct(Integer.toString(1), 1, 2000, 3000));
+        productRepository.save(getProduct(Integer.toString(2), 2, 3000, 9000));
+        productRepository.save(getProduct(Integer.toString(2), 4, 1500, 200));
+        productRepository.save(getProduct(Integer.toString(4), 4, 4000, 3000));
+        productRepository.save(getProduct(Integer.toString(5), 5, 10000, 1500));
+        productRepository.save(getProduct(Integer.toString(6), 6, 10000, 1000));
+        productRepository.save(getProduct(Integer.toString(7), 7, 500, 10000));
+        productRepository.save(getProduct(Integer.toString(8), 8, 8500, 3500));
+        productRepository.save(getProduct(Integer.toString(9), 9, 1000, 2000));
+        productRepository.save(getProduct(Integer.toString(10), 10, 5100, 1700));
     }
 
     private Product getProduct(String id, int nameNumber, int price, int stock) {
         return new Product(id, "상품" + nameNumber, price, stock);
     }
 
-    //region 주제 키워드
+    //region **주제 키워드 테스트**
     @Test
     void findTest() {
         List<Product> foundAll = productRepository.findAll();
@@ -121,7 +123,7 @@ public class ProductRepositoryTest {
     }
     //endregion
 
-    //region 조건자 키워드 테스트
+    //region **조건자 키워드 테스트**
     @Test
     void isEqualsTest() {
         List<Product> foundAll = productRepository.findAll();
@@ -216,6 +218,99 @@ public class ProductRepositoryTest {
     }
     //endregion
 
+    //region **정렬과 페이징 테스트**
+    @Test
+    void orderByTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByNameContainingOrderByStockAsc("상품");
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+        
+        foundProducts = productRepository.findByNameContainingOrderByStockDesc("상품");
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+
+        foundProducts = productRepository.findFirst5ByNameContainingOrderByStockAsc("상품");
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void multiOrderByTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByNameContainingOrderByPriceAscStockDesc("상품");
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void orderByWithParameterTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByNameContaining(
+            "상품",
+            Sort.by(Order.asc("price"))
+        );
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+
+        foundProducts = productRepository.findByNameContaining(
+            "상품",
+            Sort.by(Order.asc("price"), Order.asc("stock"))
+        );
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    void pagingTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceGreaterThan(
+            200,
+            PageRequest.of(0, 2)
+        );
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+
+        foundProducts = productRepository.findByPriceGreaterThan(
+            200,
+            PageRequest.of(4, 2)
+        );
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+    //endregion
 
     @Test
     public void basicCRUDTest() {

@@ -1,12 +1,14 @@
 package study.min.aroundhub.data.repository;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import study.min.aroundhub.data.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
 
-    /* 쿼리 메서드의 주제 키워드 */
+    //region **쿼리 메서드의 주제 키워드**
     // 조회
     List<Product> findByName(String name);
     List<Product> queryByName(String name);
@@ -24,8 +26,9 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     // 값 개수 제한
     List<Product> findFirst5ByName(String name);
     List<Product> findTop3ByName(String name);
+    //endregion
 
-    /* 쿼리 메서드의 조건자 키워드 */
+    //region **쿼리 메서드의 조건자 키워드**
 
     // Is, Equals (생략 가능)
     // Logical Keyword: IS, Keyword Expressions: Is, Equals, (or no keyword)
@@ -50,4 +53,23 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     // (Is)Like, (Is)Containing, (Is)StartingWith, (Is)EndingWith
     List<Product> findByNameContains(String name);
+    //endregion
+
+    //region **정렬과 페이징**
+
+    // Asc: 오름차순, Desc: 내림차순
+    List<Product> findByNameContainingOrderByStockAsc(String name);
+    List<Product> findByNameContainingOrderByStockDesc(String name);
+
+    List<Product> findFirst5ByNameContainingOrderByStockAsc(String name);
+
+    // 여러 정렬 기준 사용
+    List<Product> findByNameContainingOrderByPriceAscStockDesc(String name);
+
+    // 매개변수를 활용한 정렬
+    List<Product> findByNameContaining(String name, Sort sort);
+
+    // 페이징 처리하기
+    List<Product> findByPriceGreaterThan(Integer price, Pageable pageable);
+    //endregion
 }
