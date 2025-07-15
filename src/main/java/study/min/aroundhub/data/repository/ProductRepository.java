@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import study.min.aroundhub.data.entity.Product;
 
 public interface ProductRepository extends JpaRepository<Product, String> {
@@ -27,6 +29,9 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findFirst5ByName(String name);
     List<Product> findTop3ByName(String name);
     //endregion
+
+
+
 
     //region **쿼리 메서드의 조건자 키워드**
 
@@ -55,6 +60,9 @@ public interface ProductRepository extends JpaRepository<Product, String> {
     List<Product> findByNameContains(String name);
     //endregion
 
+
+
+
     //region **정렬과 페이징**
 
     // Asc: 오름차순, Desc: 내림차순
@@ -71,5 +79,32 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     // 페이징 처리하기
     List<Product> findByPriceGreaterThan(Integer price, Pageable pageable);
+    //endregion
+
+
+
+
+    //region **@Query 어노테이션**
+
+    @Query("select p from Product p where p.price > 2000")
+    List<Product> findByPriceBasis();
+
+    @Query(value = "select * from Product p where p.price > 2000", nativeQuery = true)
+    List<Product> findByPriceBasisNativeQuery();
+
+    @Query("select p from Product p where p.price > ?1")
+    List<Product> findByPriceWithParameter(Integer price);
+
+    @Query("select p from Product p where p.price > :price")
+    List<Product> findByPriceWithParameterNaming1(Integer price);
+
+    @Query("select p from Product p where p.price > :pri")
+    List<Product> findByPriceWithParameterNaming2(@Param("pri") Integer price);
+
+    @Query(
+        value = "SELECT * FROM product WHERE price > :price",
+        countQuery = "SELECT count(*) FROM product WHERE price > ?1",
+        nativeQuery = true
+    ) List<Product> findByPriceWithParameterPaging(Integer price, Pageable pageable);
     //endregion
 }

@@ -123,6 +123,9 @@ public class ProductRepositoryTest {
     }
     //endregion
 
+
+
+
     //region **조건자 키워드 테스트**
     @Test
     void isEqualsTest() {
@@ -218,6 +221,9 @@ public class ProductRepositoryTest {
     }
     //endregion
 
+
+
+
     //region **정렬과 페이징 테스트**
     @Test
     void orderByTest() {
@@ -311,6 +317,111 @@ public class ProductRepositoryTest {
         }
     }
     //endregion
+
+
+
+    //region **@Query 어노테이션**
+
+    // select p1_0.id,p1_0.created_at,p1_0.name,p1_0.price,p1_0.stock,p1_0.updated_at from product p1_0 where p1_0.price>2000
+    @Test
+    public void queryTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceBasis();
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    // select * from Product p where p.price > 2000
+    public void nativeQueryTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceBasisNativeQuery();
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    // select p1_0.id,p1_0.created_at,p1_0.name,p1_0.price,p1_0.stock,p1_0.updated_at from product p1_0 where p1_0.price>?
+    public void parameterQueryTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceWithParameter(2000);
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    // select p1_0.id,p1_0.created_at,p1_0.name,p1_0.price,p1_0.stock,p1_0.updated_at from product p1_0 where p1_0.price>?
+    public void parameterNamingQueryTest1() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceWithParameterNaming1(2000);
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    // select p1_0.id,p1_0.created_at,p1_0.name,p1_0.price,p1_0.stock,p1_0.updated_at from product p1_0 where p1_0.price>?
+    public void parameterNamingQueryTest2() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceWithParameterNaming2(2000);
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    @Test
+    public void nativeQueryPagingTest() {
+        List<Product> foundAll = productRepository.findAll();
+        System.out.println("========== Test Data Start ==========");
+        for (Product product : foundAll) {
+            System.out.println(product.toString());
+        }
+        System.out.println("========== Test Data End ==========");
+
+        List<Product> foundProducts = productRepository.findByPriceWithParameterPaging(2000,
+            PageRequest.of(2, 2));
+        for (Product product : foundProducts) {
+            System.out.println(product.toString());
+        }
+    }
+
+    //endregion
+
+
+
 
     @Test
     public void basicCRUDTest() {
